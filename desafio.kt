@@ -2,20 +2,36 @@
 
 enum class Nivel { BASICO, INTERMEDIARIO, DIFICIL }
 
-class Usuario
+data class Usuario (val nome: String)
 
-data class ConteudoEducacional(var nome: String, val duracao: Int = 60)
+data class ConteudoEducacional(var nome: String, val duracao: Int = 60, val nivel: Nivel)
 
-data class Formacao(val nome: String, var conteudos: List<ConteudoEducacional>) {
-
+class Formacao(val nome: String, var conteudos: List<ConteudoEducacional>, var descricao: String = "Sem descrição") {
     val inscritos = mutableListOf<Usuario>()
-    
+    val duracao = conteudos.sumOf { it.duracao }
+
     fun matricular(usuario: Usuario) {
-        TODO("Utilize o parâmetro $usuario para simular uma matrícula (usar a lista de $inscritos).")
+        inscritos.add(usuario)
     }
 }
 
 fun main() {
-    TODO("Analise as classes modeladas para este domínio de aplicação e pense em formas de evoluí-las.")
-    TODO("Simule alguns cenários de teste. Para isso, crie alguns objetos usando as classes em questão.")
+
+    val hmtl  = ConteudoEducacional(nome = "HTML", duracao = 30, nivel = Nivel.BASICO)
+    val css = ConteudoEducacional(nome= "CSS", duracao = 30, nivel = Nivel.BASICO)
+    val kotlin = ConteudoEducacional(nome = "Kotlin", duracao = 120, nivel = Nivel.INTERMEDIARIO)
+    val kubernetes = ConteudoEducacional(nome = "Kubernetes", duracao = 120, nivel = Nivel.DIFICIL)
+
+    val fullstack =  Formacao(nome = "Fullstack Developer", conteudos = listOf(hmtl, css, kotlin, kubernetes))
+    fullstack.descricao = "Esse é um curso voltado para desenvolvedores que pretendem ser fullstack "
+
+    val primeiroAluno = Usuario(nome = "David")
+    val segundoAluno = Usuario(nome = "Felipe")
+
+    fullstack.matricular(usuario = primeiroAluno)
+    fullstack.matricular(usuario = segundoAluno)
+
+
+    println("${fullstack.inscritos.size} foram matriculado no curso de ${fullstack.nome}" )
+    print("descrição: ${fullstack.descricao}, duração: ${fullstack.duracao} minutos")
 }
